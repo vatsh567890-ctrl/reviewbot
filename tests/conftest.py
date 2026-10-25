@@ -26,6 +26,23 @@ SAMPLE_SQL_DIFF_PATCH = """@@ -1,4 +1,5 @@
 """
 
 
+@pytest.fixture(autouse=True)
+def clean_github_env(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Clear GitHub Actions environment variables before each test."""
+    vars_to_clear = [
+        "GITHUB_TOKEN",
+        "GITHUB_REPOSITORY",
+        "GITHUB_SHA",
+        "GITHUB_EVENT_PATH",
+        "INPUT_GITHUB_TOKEN",
+        "INPUT_GITHUB-TOKEN",
+        "INPUT_CONFIG_PATH",
+        "INPUT_FAIL_ON_ERROR",
+    ]
+    for var in vars_to_clear:
+        monkeypatch.delenv(var, raising=False)
+
+
 @pytest.fixture
 def sample_config() -> ReviewBotConfig:
     return ReviewBotConfig(
