@@ -57,7 +57,7 @@ class GitHubContext:
             )
 
         # Resolve Repository
-        resolved_repo = repository or os.environ.get("GITHUB_REPOSITORY") or ""
+        resolved_repo = repository or ""
 
         resolved_event_path = event_path or os.environ.get("GITHUB_EVENT_PATH")
         event_data: dict[str, Any] = {}
@@ -104,9 +104,15 @@ class GitHubContext:
         if "pull_request" in event_data:
             base_sha = event_data["pull_request"].get("base", {}).get("sha")
 
-        # Repository name fallback from event
+        # Repository name: check event payload first, then fallback to environment
         if not resolved_repo and "repository" in event_data:
             resolved_repo = event_data["repository"].get("full_name", "")
+        if not resolved_repo and "pull_request" in event_data:
+            resolved_repo = (
+                event_data["pull_request"].get("base", {}).get("repo", {}).get("full_name", "")
+            )
+        if not resolved_repo:
+            resolved_repo = os.environ.get("GITHUB_REPOSITORY") or ""
 
         if not resolved_repo or "/" not in resolved_repo:
             raise ValueError(
