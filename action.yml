@@ -1,6 +1,6 @@
 name: 'Automated PR Code Review Bot'
 description: 'Production-ready GitHub Action reviewing pull requests for style, missing tests, and security vulnerabilities.'
-author: 'DeepMind Advanced Agentic Coding'
+author: '[YOUR NAME]'
 
 inputs:
   github-token:
