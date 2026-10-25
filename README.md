@@ -221,9 +221,9 @@ Repositories can customize `source_paths` and `test_patterns` in `.reviewbot.yml
 
 ---
 
-## 🔌 Linter Layer Architecture (Extending to ESLint)
+## 🔌 Linter Layer Architecture & Multi-Language Support
 
-The linter architecture uses the `BaseLinter` abstract class defined in `reviewbot/linters/base.py`:
+The linter architecture is built around the `BaseLinter` abstract class defined in `reviewbot/linters/base.py`:
 
 ```python
 class BaseLinter(ABC):
@@ -244,10 +244,23 @@ class BaseLinter(ABC):
     ) -> list[Finding]: ...
 ```
 
-To add **ESLint** for TypeScript/JavaScript:
-1. Subclass `BaseLinter` in `reviewbot/linters/eslint.py`.
-2. Configure `can_handle(file_path)` to check `.js`, `.jsx`, `.ts`, `.tsx`.
-3. In `lint()`, invoke `npx eslint --format json [file]` via `subprocess.run()`, parse the output, filter findings against `added_lines`, and return standard `Finding` objects.
+### Built-in Linters
+1. **Ruff** (`reviewbot/linters/ruff.py`):
+   - Analyzes Python files (`.py`, `.pyi`).
+   - Runs `ruff check --output-format json` via subprocess.
+   - Filters findings strictly to added/changed lines in the PR diff.
+2. **ESLint** (`reviewbot/linters/eslint.py`):
+   - Analyzes JavaScript and TypeScript files (`.js`, `.jsx`, `.ts`, `.tsx`, `.mjs`, `.cjs`, `.mts`, `.cts`).
+   - Executes `eslint` via subprocess with JSON output formatting.
+   - Installed with Node.js in the Docker action image for out-of-the-box JS/TS linting.
+   - Filters findings strictly to added/changed lines in the PR diff.
+
+### Adding Custom Linters
+To support additional linters (e.g., ShellCheck, GolangCI-Lint):
+1. Subclass `BaseLinter` in `reviewbot/linters/`.
+2. Implement `can_handle()` to match relevant file extensions.
+3. In `lint()`, execute the linter with JSON output via `subprocess.run()`, map findings to standard `Finding` objects, and filter against `added_lines`.
+4. Register the new linter in `reviewbot/linters/__init__.py`.
 
 ---
 
