@@ -40,3 +40,11 @@ jobs:
       - name: "Run Pytest Suite with Coverage"
         run: |
           pytest -v --cov=reviewbot --cov-report=term-missing
+
+      - name: "Build Docker Action Image"
+        run: |
+          docker build -t reviewbot .
+
+      - name: "Smoke Test Docker Action Image"
+        run: |
+          docker run --rm reviewbot --help
