@@ -12,10 +12,10 @@ authors = [
     { name = "Code Review Bot Maintainers" }
 ]
 dependencies = [
-    "httpx>=0.28.1",
-    "pydantic>=2.10.6",
-    "pyyaml>=6.0.2",
-    "ruff>=0.9.9",
+    "httpx==0.28.1",
+    "pydantic==2.14.1",
+    "pyyaml==6.0.3",
+    "ruff==0.17.2",
 ]
 
 [project.optional-dependencies]

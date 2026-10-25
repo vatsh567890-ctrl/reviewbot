@@ -22,7 +22,7 @@ RUN npm install -g eslint
 COPY pyproject.toml README.md /app/
 COPY reviewbot/ /app/reviewbot/
 
-# Install reviewbot and dependencies
-RUN pip install .
+# Install reviewbot and pinned dependencies (ruff version matches pyproject.toml)
+RUN pip install ruff==0.17.2 && pip install .
 
 ENTRYPOINT ["python", "-m", "reviewbot.cli"]
