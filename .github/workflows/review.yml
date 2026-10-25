@@ -1,0 +1,27 @@
+name: "Pull Request Automated Review"
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  review:
+    name: "Analyze PR Changes"
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout repository"
+        uses: actions/checkout@v4
+        with:
+          # Fetch full history to inspect changes and local file contexts
+          fetch-depth: 0
+
+      - name: "Run Automated Code Review Bot"
+        uses: ./
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          config-path: ".reviewbot.yml"
+          fail-on-error: "false"

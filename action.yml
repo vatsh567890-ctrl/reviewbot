@@ -1,0 +1,33 @@
+name: 'Automated PR Code Review Bot'
+description: 'Production-ready GitHub Action reviewing pull requests for style, missing tests, and security vulnerabilities.'
+author: 'DeepMind Advanced Agentic Coding'
+
+inputs:
+  github-token:
+    description: 'GitHub token for REST API authentication'
+    required: false
+    default: ${{ github.token }}
+  config-path:
+    description: 'Path to .reviewbot.yml configuration file'
+    required: false
+    default: '.reviewbot.yml'
+  fail-on-error:
+    description: 'If true, exit with a non-zero code when error-level issues are found'
+    required: false
+    default: 'false'
+
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  env:
+    GITHUB_TOKEN: ${{ inputs.github-token }}
+    INPUT_GITHUB_TOKEN: ${{ inputs.github-token }}
+    INPUT_CONFIG_PATH: ${{ inputs.config-path }}
+    INPUT_FAIL_ON_ERROR: ${{ inputs.fail-on-error }}
+  args:
+    - '--config-path'
+    - ${{ inputs.config-path }}
+
+branding:
+  icon: 'check-circle'
+  color: 'blue'

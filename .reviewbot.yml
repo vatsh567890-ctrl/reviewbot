@@ -1,0 +1,46 @@
+# Automated Code Review Bot Configuration
+# All settings are optional with sensible defaults.
+
+# Rules to explicitly enable or disable (None means all active rules run)
+# enabled_rules:
+#   - SEC001
+#   - SEC002
+#   - SEC003
+disabled_rules: []
+
+# Minimum severity threshold to post: "info", "warning", or "error"
+severity_threshold: "info"
+
+# Maximum inline comments posted per review run
+max_comments: 30
+
+# File patterns to exclude from analysis
+ignore_paths:
+  - ".git/**"
+  - ".github/**"
+  - "node_modules/**"
+  - ".venv/**"
+  - "dist/**"
+  - "build/**"
+  - "*.min.js"
+  - "*.min.css"
+  - "*.lock"
+  - "package-lock.json"
+
+# Source code paths and test file patterns for missing-test checks
+source_paths:
+  - "src/"
+  - "reviewbot/"
+
+test_patterns:
+  - "tests/**/test_*.py"
+  - "tests/**/*_test.py"
+
+# If true, submit review with REQUEST_CHANGES when error-level issues are found
+request_changes_on_error: false
+
+# Optional rule severity overrides
+rule_severities:
+  SEC001: "error"
+  SEC002: "error"
+  SEC003: "error"
