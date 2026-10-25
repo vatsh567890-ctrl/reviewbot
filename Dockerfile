@@ -7,11 +7,16 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 WORKDIR /app
 
-# Install git and ca-certificates
+# Install git, ca-certificates, Node.js, and npm
 RUN apt-get update && apt-get install -y --no-install-recommends \
     git \
     ca-certificates \
+    nodejs \
+    npm \
     && rm -rf /var/lib/apt/lists/*
+
+# Install ESLint globally for JavaScript/TypeScript analysis
+RUN npm install -g eslint
 
 # Copy package source and manifests
 COPY pyproject.toml README.md /app/
